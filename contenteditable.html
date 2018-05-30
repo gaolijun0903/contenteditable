@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <title>contenteditable</title>
+    <style>
+    	.item{
+    		height: 60px;
+    		width: 300px;
+    		border: 1px solid red;
+		  
+    	}
+    	.test_box{
+			width:100%;
+			min-height: 60px; 
+    		max-height: 120px;
+			word-wrap: break-word;
+			overflow-x: hidden;
+		  	overflow-y: auto;
+		}
+		.test_box:empty:before{
+			content: attr(placeholder);
+			color:#bbb;
+		}
+		.test_box:focus:before{
+			content:none;
+		}
+	
+    </style>
+</head>
+<body>
+<div class="item">
+	<div id="test_box" class="test_box" contenteditable="true" placeholder='当 element 内容为空时,我就会出现' onfocus="" onblur="" oninput ="e()"  ></div>
+	
+</div>
+<script type="text/javascript">
+
+var ele = document.getElementById('test_box');
+
+function e(){
+	console.log('oninput=='+ele.innerText);
+	console.log('oninput=='+ele.value);
+	var str = ele.innerText;
+	if(str.length>=10){
+		ele.innerText = str.substr(0,10)
+		keepLastIndex(ele);
+	}
+}
+
+function keepLastIndex(obj) {
+    if (window.getSelection) {//ie11 10 9 ff safari
+        obj.focus(); //解决ff不获取焦点无法定位问题
+        var range = window.getSelection();//创建range
+        range.selectAllChildren(obj);//range 选择obj下所有子内容
+        range.collapseToEnd();//光标移至最后
+    }
+    else if (document.selection) {//ie10 9 8 7 6 5
+        var range = document.selection.createRange();//创建选择对象
+        //var range = document.body.createTextRange();
+        range.moveToElementText(obj);//range定位到obj
+        range.collapse(false);//光标移至最后
+        range.select();
+    }
+}
+
+</script>
+</body>
+</html>   
